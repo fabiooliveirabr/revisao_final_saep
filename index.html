@@ -8,6 +8,55 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
+    <div id="menu_topo">
+        <h1>Projetos</h1>
+        <div>
+            <button id="btnCadastrarUsuario">Cadastrar usuário</button>
+            <button id="btnCadastrarProjeto">Cadastrar projeto</button>
+            <button id="btnGerenciar">Gerenciar</button>
+        </div>
+    </div>
+
+    <div id="conteudo">
+        <div id="pendente"></div>
+        <div id="emAndamento"></div>
+        <div id="finalizado"></div>
+    </div>
+
+    <div class="escurecer" id="formCadProjeto">
+        <div class="formulario">
+            <button id="btnFecharProj">X</button> <br>
+            <h1>Cadastrar projeto</h1>
+            Nome: <br>
+            <input type="text" id="caixa_nome"> <br><br>
+
+            Usuario: <br>
+            <select id="caixa_usuario"></select> <br><br>
+
+            Descrição: <br> 
+            <input type="text" id="caixa_descricao"> <br><br>
+
+            Situação: <br>
+            <select id="caixa_situacao">
+                <option value="">Selecione</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Em andamento">Em andamento</option>
+                <option value="Finalizado">Finalizado</option>                
+            </select> <br> <br>
+
+            <button id="btnSalvar">Salvar</button>
+
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $("#formCadProjeto").hide();
+            $.get("consultarUsuarios.php", function(resposta){
+                $("#caixa_usuario").html(resposta);
+            });
+        });
+    </script>
 
 </body>
 </html>

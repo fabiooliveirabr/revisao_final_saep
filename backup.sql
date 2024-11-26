@@ -14,7 +14,7 @@ CREATE TABLE tb_projetos(
 	id_projeto INT PRIMARY KEY AUTO_INCREMENT,
     nome_projeto VARCHAR(255) NOT NULL,
     fk_id_usuario INT NOT NULL,
-    situcao ENUM('Pendente', 'Em andamento', 'Finalizado'),
+    situacao ENUM('Pendente', 'Em andamento', 'Finalizado'),
     descricao VARCHAR(255) NOT NULL
 );
 
