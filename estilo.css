@@ -42,3 +42,16 @@ body{
     padding: 20px;
     border-radius: 10px;
 }
+
+.cartoes{
+    background-color: #89f8cf;
+    border-radius: 10px;
+    transition: all 0.5s;
+    margin-bottom: 30px;
+    padding: 20px;
+}
+
+.cartoes:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+}

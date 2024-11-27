@@ -1,15 +1,16 @@
 <?php
-// consultarPendentes.php
+// consultarFinalizads.php
 include "conexao.php";
-$sql = "SELECT * FROM vw_tudo WHERE situacao='Pendente'";
+$sql = "SELECT * FROM vw_tudo WHERE situacao='Finalizado'";
 $consultar = $pdo->prepare($sql);
 try {
     $consultar->execute();
     $resultado = $consultar->fetchAll(PDO::FETCH_ASSOC);
-    echo "<h1>Pendente</h1>";
+    echo "<h1>Finalizado</h1>";
     foreach($resultado as $item){
         $id_projeto = $item['id_projeto'];
         $nome_projeto = $item['nome_projeto'];
+        $fk_id_usuario = $item['fk_id_usuario'];
         $fk_id_usuario = $item['fk_id_usuario'];
         $situacao = $item['situacao'];
         $descricao = $item['descricao'];

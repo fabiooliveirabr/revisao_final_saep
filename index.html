@@ -23,9 +23,24 @@
         <div id="finalizado"></div>
     </div>
 
+    <div class="escurecer" id="carregando">
+        <img src="carregando.gif" height="80">
+    </div>
+
+    <div class="escurecer" id="formCadUsuario">
+        <div class="formulario">
+            <button id="btnFecharCadUser">X</button> <br>
+            <h1>Cadastrar usuário</h1>
+            Nome do usuário: <br>
+            <input type="text" id="caixa_nome_usuario"> <br><br>
+
+            <button id="btnSalvarUsuario">Cadastrar usuário</button>
+        </div>
+    </div>
+
     <div class="escurecer" id="formCadProjeto">
         <div class="formulario">
-            <button id="btnFecharProj">X</button> <br>
+            <button id="btnFecharCadProj">X</button> <br>
             <h1>Cadastrar projeto</h1>
             Nome: <br>
             <input type="text" id="caixa_nome"> <br><br>
@@ -43,19 +58,207 @@
                 <option value="Em andamento">Em andamento</option>
                 <option value="Finalizado">Finalizado</option>                
             </select> <br> <br>
+            <button id="btnSalvarProjeto">Salvar</button>
+        </div>
+    </div>
 
-            <button id="btnSalvar">Salvar</button>
+    <div class="escurecer" id="formEditarProjeto">
+        <div class="formulario">
+            <button id="btnFecharEditar">X</button> <br>
+            <h1>Editar projeto</h1>
+            ID do projeto: <br>
+            <input type="text" id="caixa_id2" disabled> <br><br>
 
+            Nome: <br>
+            <input type="text" id="caixa_nome2"> <br><br>
+
+            Usuario: <br>
+            <select id="caixa_usuario2"></select> <br><br>
+
+            Descrição: <br> 
+            <input type="text" id="caixa_descricao2"> <br><br>
+
+            Situação: <br>
+            <select id="caixa_situacao2">
+                <option value="">Selecione</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Em andamento">Em andamento</option>
+                <option value="Finalizado">Finalizado</option>                
+            </select> <br> <br>
+            <button id="btnAlteracoes">Salvar alterações</button>
+            <button id="btnDeletar">Deletar</button>
         </div>
     </div>
 
     <script>
         $(document).ready(function(){
+            $("#formEditarProjeto").hide();
             $("#formCadProjeto").hide();
+            $("#formCadUsuario").hide();
+            $("#carregando").hide();
+            
+            $("#btnFecharCadProj").click(function(){
+                $("#formCadProjeto").hide();
+            });
+
+            $("#btnFecharCadUser").click(function(){
+                $("#formCadUsuario").hide();
+            });
+
+            $("#btnFecharEditar").click(function(){
+                $("#formEditarProjeto").hide();
+            });
+
+            $("#btnSalvarProjeto").click(function(){
+                $("#formCadProjeto").hide();
+                $("#carregando").show();
+                var nome_capturado = $("#caixa_nome").val();
+                var usuario_capturado = $("#caixa_usuario").val();
+                var descricao_capturada = $("#caixa_descricao").val();
+                var situacao_capturado = $("#caixa_situacao").val();
+                $.ajax({
+                    url: "cadastrarProjeto.php",
+                    method: "POST",
+                    data: {nome_projeto: nome_capturado,
+                           fk_id_usuario: usuario_capturado,
+                           situacao: situacao_capturado,
+                           descricao: descricao_capturada },
+                    success: function(resposta){
+                        alert(resposta);
+                        $("#carregando").hide();
+                        $("#btnGerenciar").click();
+                    },
+                    error: function(){
+                        alert("Erro ao enviar")
+                    }
+                });
+            });
+
+
+            $("#btnSalvarUsuario").click(function(){
+                $("#formCadUsuario").hide();
+                $("#carregando").show();
+                var usuario_capturado = $("#caixa_nome_usuario").val();
+                $.ajax({
+                    url: "cadastrarUsuario.php",
+                    method: "POST",
+                    data: {nome_usuario: usuario_capturado},
+                    success: function(resposta){
+                       alert(resposta);
+                       location.reload();
+                    },
+                    error: function(){
+                        alert("Erro ao enviar");
+                    }
+                });
+
+            });
+
+
+            $(document).on("click", ".cartoes", function(){
+                $("#formEditarProjeto").show();
+
+                var id = $(this).find(".id_projeto").text();
+                $("#caixa_id2").val(id);
+
+                var nome = $(this).find(".nome_projeto").text();
+                $("#caixa_nome2").val(nome);
+
+                var usuario = $(this).find(".fk_id_usuario").text();
+                $("#caixa_usuario2").val(usuario);
+
+                var descricao = $(this).find(".descricao").text();
+                $("#caixa_descricao2").val(descricao);
+
+                var situcacao = $(this).find(".situacao").text();
+                $("#caixa_situacao2").val(situcacao);
+            });
+
+
+
+            $("#btnAlteracoes").click(function(){
+                $("#formEditarProjeto").hide();
+                $("#carregando").show();
+                var id_capturado = $("#caixa_id2").val();
+                var nome_capturado = $("#caixa_nome2").val();
+                var usuario_capturado = $("#caixa_usuario2").val();
+                var descricao_capturada = $("#caixa_descricao2").val();
+                var situacao_capturada = $("#caixa_situacao2").val();
+                $.ajax({
+                    url: "atualizar.php",
+                    method: "POST",
+                    data: {id_projeto: id_capturado,
+                           nome_projeto: nome_capturado,
+                           fk_id_usuario: usuario_capturado,
+                           situacao: situacao_capturada,
+                           descricao: descricao_capturada
+                    },
+                    success: function(resposta){
+                        alert(resposta);
+                        $("#carregando").hide();
+                        $("#btnGerenciar").click();
+                    },
+                    error: function() {
+                        alert("Erro ao enviar");
+                    }
+                });
+            });
+
+
+            $("#btnDeletar").click(function(){               
+                if(confirm("Tem certeza que deseja apagar?")){
+                    $("#formEditarProjeto").hide();
+                    $("#carregando").show();
+                    var id_capturado = $("#caixa_id2").val();
+                    $.ajax({
+                        url: "deletar.php",
+                        method: "POST",
+                        data: {id_projeto: id_capturado},
+                        success: function(resposta){
+                            alert(resposta);
+                            $("#carregando").hide();
+                            $("#btnGerenciar").click();
+                        },
+                        error: function() {
+                            alert("Erro ao enviar");
+                        }
+                    });
+                }
+            });
+
+
+
+            $("#btnGerenciar").click(function(){
+                $("#pendente").html("Carregando...");
+                $("#pendente").load("consultarPendentes.php");
+
+                $("#emAndamento").html("Carregando...");
+                $("#emAndamento").load("consultarEmAndamento.php");
+
+                $("#finalizado").html("Carregando...");
+                $("#finalizado").load("consultarFinalizados.php");
+            });
+
+
+
+            $("#btnCadastrarProjeto").click(function(){
+                $("#formCadProjeto").show();
+            });
+
+
+
+            $("#btnCadastrarUsuario").click(function(){
+                $("#formCadUsuario").show();
+            });
+            
+
             $.get("consultarUsuarios.php", function(resposta){
                 $("#caixa_usuario").html(resposta);
+                $("#caixa_usuario2").html(resposta);
             });
-        });
+
+
+        });//Fim do Document Ready
     </script>
 
 </body>
